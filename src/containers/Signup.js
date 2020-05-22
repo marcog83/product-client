@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { HelpBlock, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import { useAppContext } from '../libs/contextLib';
 import { useFormFields } from '../libs/hooksLib';
@@ -66,12 +66,12 @@ export default function Signup() {
   function renderConfirmationForm() {
     return (
       <form onSubmit={handleConfirmationSubmit}>
-        <FormGroup controlId='confirmationCode' bsSize='large'>
-          <ControlLabel>Confirmation Code</ControlLabel>
+        <FormGroup controlId='confirmationCode'>
+          <FormLabel>Confirmation Code</FormLabel>
           <FormControl autoFocus type='tel' onChange={handleFieldChange} value={fields.confirmationCode} />
-          <HelpBlock>Please check your email for the code.</HelpBlock>
+          <p>Please check your email for the code.</p>
         </FormGroup>
-        <LoaderButton block type='submit' bsSize='large' isLoading={isLoading} disabled={!validateConfirmationForm()}>
+        <LoaderButton block type='submit' isLoading={isLoading} disabled={!validateConfirmationForm()}>
           Verify
         </LoaderButton>
       </form>
@@ -81,19 +81,35 @@ export default function Signup() {
   function renderForm() {
     return (
       <form onSubmit={handleSubmit}>
-        <FormGroup controlId='email' bsSize='large'>
-          <ControlLabel>Email</ControlLabel>
-          <FormControl autoFocus type='email' value={fields.email} onChange={handleFieldChange} />
+        <FormGroup controlId='email'>
+          <FormLabel>Email</FormLabel>
+          <FormControl
+            autoComplete='username'
+            autoFocus
+            type='email'
+            value={fields.email}
+            onChange={handleFieldChange}
+          />
         </FormGroup>
-        <FormGroup controlId='password' bsSize='large'>
-          <ControlLabel>Password</ControlLabel>
-          <FormControl type='password' value={fields.password} onChange={handleFieldChange} />
+        <FormGroup controlId='password'>
+          <FormLabel>Password</FormLabel>
+          <FormControl
+            autoComplete='new-password'
+            type='password'
+            value={fields.password}
+            onChange={handleFieldChange}
+          />
         </FormGroup>
-        <FormGroup controlId='confirmPassword' bsSize='large'>
-          <ControlLabel>Confirm Password</ControlLabel>
-          <FormControl type='password' onChange={handleFieldChange} value={fields.confirmPassword} />
+        <FormGroup controlId='confirmPassword'>
+          <FormLabel>Confirm Password</FormLabel>
+          <FormControl
+            autoComplete='new-password'
+            type='password'
+            onChange={handleFieldChange}
+            value={fields.confirmPassword}
+          />
         </FormGroup>
-        <LoaderButton block type='submit' bsSize='large' isLoading={isLoading} disabled={!validateForm()}>
+        <LoaderButton block type='submit' isLoading={isLoading} disabled={!validateForm()}>
           Signup
         </LoaderButton>
       </form>

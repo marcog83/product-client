@@ -4,10 +4,15 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 import { Amplify } from 'aws-amplify';
 
 import config from './config';
+
+library.add(fab, faSync);
 
 Amplify.configure({
   Auth: {
@@ -15,24 +20,23 @@ Amplify.configure({
     region: config.cognito.REGION,
     userPoolId: config.cognito.USER_POOL_ID,
     identityPoolId: config.cognito.IDENTITY_POOL_ID,
-    userPoolWebClientId: config.cognito.APP_CLIENT_ID
+    userPoolWebClientId: config.cognito.APP_CLIENT_ID,
   },
   Storage: {
     region: config.s3.REGION,
     bucket: config.s3.BUCKET,
-    identityPoolId: config.cognito.IDENTITY_POOL_ID
+    identityPoolId: config.cognito.IDENTITY_POOL_ID,
   },
   API: {
     endpoints: [
       {
-        name: "products",
+        name: 'products',
         endpoint: config.apiGateway.URL,
-        region: config.apiGateway.REGION
+        region: config.apiGateway.REGION,
       },
-    ]
-  }
+    ],
+  },
 });
-
 
 ReactDOM.render(
   <Router>

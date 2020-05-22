@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PageHeader, ListGroup, ListGroupItem } from 'react-bootstrap';
+import {   ListGroup, ListGroupItem } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 import { useAppContext } from '../libs/contextLib';
@@ -75,7 +75,7 @@ export default function Home() {
   function renderNotes() {
     return (
       <div className='notes'>
-        <PageHeader>Your Notes</PageHeader>
+        <h2>Your Notes</h2>
         <ListGroup>
           <LinkContainer key='new' to='/notes/new'>
             <ListGroupItem>

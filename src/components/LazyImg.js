@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Storage } from 'aws-amplify';
-import Card from 'react-bootstrap/Card';
 export default ({ className, id }) => {
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState('/default-placeholder-300x300.png');
   useEffect(() => {
     if (id) {
       loadImg(id);
@@ -13,11 +12,11 @@ export default ({ className, id }) => {
     setUrl(url);
   }
   return url ? (
-    <Card.Img
-      variant='top'
+    <img
+      className='card-img top'
+      onError={(e) => (e.currentTarget.src = '/default-placeholder-300x300.png')}
       style={{
         height: 160,
-        width: '100%',
         display: 'block',
       }}
       src={url}
