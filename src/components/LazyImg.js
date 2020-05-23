@@ -13,12 +13,9 @@ export default ({ className, id }) => {
   }
   return url ? (
     <img
-      className='card-img top'
+      className={className}
       onError={(e) => (e.currentTarget.src = '/default-placeholder-300x300.png')}
-      style={{
-        height: 160,
-        display: 'block',
-      }}
+       
       src={url}
     />
   ) : null;

@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { API, Storage } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import { onError } from '../libs/errorLib';
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel, Figure } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import config from '../config';
 import './Notes.css';
 import { s3Upload } from '../libs/awsLib';
+import LazyImg from '../components/LazyImg';
 
 export default function Notes() {
   const file = useRef(null);
@@ -25,11 +26,7 @@ export default function Notes() {
     async function onLoad() {
       try {
         const note = await loadNote();
-        const { content, attachment } = note;
-
-        if (attachment) {
-          note.attachmentURL = await Storage.vault.get(attachment);
-        }
+        const { content } = note;
 
         setContent(content);
         setNote(note);
@@ -45,9 +42,7 @@ export default function Notes() {
     return content.length > 0;
   }
 
-  function formatFilename(str) {
-    return str.replace(/^\w+-/, '');
-  }
+  
 
   function handleFileChange(event) {
     file.current = event.target.files[0];
@@ -120,14 +115,11 @@ export default function Notes() {
             as='textarea' 
             onChange={(e) => setContent(e.target.value)} />
           </FormGroup>
-          {note.attachment && (
-            <FormGroup>
-              <FormLabel>Attachment</FormLabel>
-              <a target='_blank' rel='noopener noreferrer' href={note.attachmentURL}>
-                {formatFilename(note.attachment)}
-              </a>
-            </FormGroup>
-          )}
+          <Figure>
+            <LazyImg  id={note.attachment} />   
+          </Figure>
+          
+           
           <FormGroup controlId='file'>
             {!note.attachment && <FormLabel>Attachment</FormLabel>}
             <FormControl onChange={handleFileChange} type='file' />

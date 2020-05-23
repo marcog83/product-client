@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {   ListGroup, ListGroupItem } from 'react-bootstrap';
+import { ListGroup, ListGroupItem, Figure } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 import { useAppContext } from '../libs/contextLib';
@@ -42,7 +42,10 @@ export default function Home() {
     return notes.map((note, i) => (
       <LinkContainer key={note.productId} to={`/notes/${note.productId}`}>
         <Card>
-          <LazyImg className='card-img-top' id={note.attachment} />
+          <Figure className='card-img-top'>
+            <LazyImg className='figure-img img-fluid' id={note.attachment} />
+          </Figure>
+
           <Card.Body>
             <Card.Title>{note.content.trim().split('\n')[0]}</Card.Title>
             <Card.Text></Card.Text>

@@ -6,7 +6,7 @@ import './LoaderButton.css';
 export default function LoaderButton({ isLoading, className = '', disabled = false, ...props }) {
   return (
     <Button className={`LoaderButton ${className}`} disabled={disabled || isLoading} {...props}>
-      {isLoading && <FontAwesomeIcon icon='sync' className='fa-spin' />}
+      {isLoading && <FontAwesomeIcon icon='sync' className='fa-spin spinning' />}
       {props.children}
     </Button>
   );
