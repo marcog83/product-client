@@ -59,7 +59,7 @@ export default function NewNote() {
         <FormGroup controlId="content">
           <FormControl
             value={content}
-            componentClass="textarea"
+            as="textarea"
             onChange={e => setContent(e.target.value)}
           />
         </FormGroup>
@@ -70,8 +70,8 @@ export default function NewNote() {
         <LoaderButton
           block
           type="submit"
-          bsSize="large"
-          bsStyle="primary"
+          size="large"
+          variant="primary"
           isLoading={isLoading}
           disabled={!validateForm()}
         >

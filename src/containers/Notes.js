@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { API, Storage } from 'aws-amplify';
 import { onError } from '../libs/errorLib';
-import { FormGroup, FormControl, FormLabel  } from 'react-bootstrap';
+import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 import LoaderButton from '../components/LoaderButton';
 import config from '../config';
 import './Notes.css';
@@ -53,37 +53,33 @@ export default function Notes() {
     file.current = event.target.files[0];
   }
   function saveNote(note) {
-    return API.put("products", `/product/${id}`, {
-      body: note
+    return API.put('products', `/product/${id}`, {
+      body: note,
     });
   }
 
   async function handleSubmit(event) {
     let attachment;
-  
+
     event.preventDefault();
-  
+
     if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
-      alert(
-        `Please pick a file smaller than ${
-          config.MAX_ATTACHMENT_SIZE / 1000000
-        } MB.`
-      );
+      alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE / 1000000} MB.`);
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     try {
       if (file.current) {
         attachment = await s3Upload(file.current);
       }
-  
+
       await saveNote({
         content,
-        attachment: attachment || note.attachment
+        attachment: attachment || note.attachment,
       });
-      history.push("/");
+      history.push('/');
     } catch (e) {
       onError(e);
       setIsLoading(false);
@@ -91,25 +87,23 @@ export default function Notes() {
   }
 
   function deleteNote() {
-    return API.del("products", `/product/${id}`);
+    return API.del('products', `/product/${id}`);
   }
-  
+
   async function handleDelete(event) {
     event.preventDefault();
-  
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this note?"
-    );
-  
+
+    const confirmed = window.confirm('Are you sure you want to delete this note?');
+
     if (!confirmed) {
       return;
     }
-  
+
     setIsDeleting(true);
-  
+
     try {
       await deleteNote();
-      history.push("/");
+      history.push('/');
     } catch (e) {
       onError(e);
       setIsDeleting(false);
@@ -121,32 +115,33 @@ export default function Notes() {
       {note && (
         <form onSubmit={handleSubmit}>
           <FormGroup controlId='content'>
-            <FormControl value={content} componentClass='textarea' onChange={(e) => setContent(e.target.value)} />
+            <FormControl 
+            value={content} 
+            as='textarea' 
+            onChange={(e) => setContent(e.target.value)} />
           </FormGroup>
           {note.attachment && (
             <FormGroup>
-              <FormLabel >Attachment</FormLabel >
-              <FormControl.Static>
-                <a target='_blank' rel='noopener noreferrer' href={note.attachmentURL}>
-                  {formatFilename(note.attachment)}
-                </a>
-              </FormControl.Static>
+              <FormLabel>Attachment</FormLabel>
+              <a target='_blank' rel='noopener noreferrer' href={note.attachmentURL}>
+                {formatFilename(note.attachment)}
+              </a>
             </FormGroup>
           )}
           <FormGroup controlId='file'>
-            {!note.attachment && <FormLabel >Attachment</FormLabel >}
+            {!note.attachment && <FormLabel>Attachment</FormLabel>}
             <FormControl onChange={handleFileChange} type='file' />
           </FormGroup>
           <LoaderButton
             block
             type='submit'
-            bsSize='large'
-            bsStyle='primary'
+            size='large'
+            variant='primary'
             isLoading={isLoading}
             disabled={!validateForm()}>
             Save
           </LoaderButton>
-          <LoaderButton block bsSize='large' bsStyle='danger' onClick={handleDelete} isLoading={isDeleting}>
+          <LoaderButton block size='large' variant='danger' onClick={handleDelete} isLoading={isDeleting}>
             Delete
           </LoaderButton>
         </form>
