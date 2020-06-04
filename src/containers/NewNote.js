@@ -65,7 +65,7 @@ export default function NewNote() {
         </FormGroup>
         <FormGroup controlId="file">
           <FormLabel >Attachment</FormLabel >
-          <FormControl onChange={handleFileChange} type="file" />
+          <FormControl onChange={handleFileChange} type="file" accept='image/*' />
         </FormGroup>
         <LoaderButton
           block

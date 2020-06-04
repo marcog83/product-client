@@ -8,11 +8,12 @@ export default ({ className, id }) => {
     }
   }, [id]);
   async function loadImg(id) {
-    const url = await Storage.get(id, { level: 'public' });
+    const url = await Storage.vault.get(id);
     setUrl(url);
   }
   return url ? (
     <img
+      alt="myimage"
       className={className}
       onError={(e) => (e.currentTarget.src = '/default-placeholder-300x300.png')}
        
