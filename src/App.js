@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';  
+import { Link, useHistory } from 'react-router-dom';
 import Routes from './Routes';
 import { AppContext } from './libs/contextLib';
 import { Auth } from 'aws-amplify';
@@ -36,7 +36,7 @@ function App() {
   }
   return (
     !isAuthenticating && (
-      <div className='App container'>
+      <div className='container-fluid'>
         <nav className='navbar navbar-expand-lg navbar-light bg-light'>
           <div className='container-fluid'>
             <div className='navbar-header'>
@@ -44,8 +44,19 @@ function App() {
                 Home
               </Link>
             </div>
-            <div className='navbar-collapse collapse'>
+
+            <div className='navbar navbar-expand'>
               <ul className='ml-auto nav navbar-nav'>
+                <li class='nav-item'>
+                  <Link className='nav-link' to='/attributes'>
+                    Attributes
+                  </Link>
+                </li>
+                <li class='nav-item'>
+                  <Link className='nav-link' to='/rules'>
+                    Rules
+                  </Link>
+                </li>
                 {isAuthenticated ? (
                   <li onClick={handleLogout} className='nav-item'>
                     <button type='button' className='btn btn-link'>

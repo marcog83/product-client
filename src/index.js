@@ -6,13 +6,13 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 import { Amplify } from 'aws-amplify';
 
 import config from './config';
 
-library.add(fab, faSync);
+library.add(fab, faPlus, faMinus);
 
 Amplify.configure({
   Auth: {
@@ -30,7 +30,7 @@ Amplify.configure({
   API: {
     endpoints: [
       {
-        name: 'products',
+        name: 'root',
         endpoint: config.apiGateway.URL,
         region: config.apiGateway.REGION,
       },

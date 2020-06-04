@@ -9,6 +9,9 @@ import Notes from './containers/Notes';
 
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 import UnauthenticatedRoute from './components/UnauthenticatedRoute';
+import { Attributes } from './containers/attributes';
+import { NewRule } from './containers/new-rule';
+import { Rules } from './containers/rules';
 
 export default function Routes() {
   return (
@@ -22,11 +25,14 @@ export default function Routes() {
       <UnauthenticatedRoute exact path='/signup'>
         <Signup />
       </UnauthenticatedRoute>
-      <AuthenticatedRoute exact path='/notes/new'>
-        <NewNote />
+      <AuthenticatedRoute exact path='/attributes'>
+        <Attributes />
       </AuthenticatedRoute>
-      <AuthenticatedRoute exact path='/notes/:id'>
-        <Notes />
+      <AuthenticatedRoute exact path='/rules'>
+        <Rules />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path='/rule/new'>
+        <NewRule />
       </AuthenticatedRoute>
       <Route>
         <NotFound />
