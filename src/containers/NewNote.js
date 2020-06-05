@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { API } from "aws-amplify";
-import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { FormGroup, FormControl, FormLabel  } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import { onError } from "../libs/errorLib";
 import config from "../config";
@@ -59,19 +59,19 @@ export default function NewNote() {
         <FormGroup controlId="content">
           <FormControl
             value={content}
-            componentClass="textarea"
+            as="textarea"
             onChange={e => setContent(e.target.value)}
           />
         </FormGroup>
         <FormGroup controlId="file">
-          <ControlLabel>Attachment</ControlLabel>
-          <FormControl onChange={handleFileChange} type="file" />
+          <FormLabel >Attachment</FormLabel >
+          <FormControl onChange={handleFileChange} type="file" accept='image/*' />
         </FormGroup>
         <LoaderButton
           block
           type="submit"
-          bsSize="large"
-          bsStyle="primary"
+          size="large"
+          variant="primary"
           isLoading={isLoading}
           disabled={!validateForm()}
         >

@@ -3,17 +3,17 @@
   const dev = {
     s3: {
       REGION: "us-east-1",
-      BUCKET: "product-list-uploads"
+      BUCKET: "product-ext-uploads-dev-s3bucket-1p5gu58k7xzpk"
     },
     apiGateway: {
       REGION: "us-east-1",
-      URL: "https://uez93u1rbk.execute-api.us-east-1.amazonaws.com/dev"
+      URL: "https://epq9j27uo2.execute-api.us-east-1.amazonaws.com/dev"
     },
     cognito: {
       REGION: "us-east-1",
-      USER_POOL_ID: "us-east-1_mflmGrRy6",
-      APP_CLIENT_ID: "619ns088gk9k07u3elkr0ka5bv",
-      IDENTITY_POOL_ID: "us-east-1:98a09952-f76b-42e1-867d-d998aae1cb21"
+      USER_POOL_ID: "us-east-1_mCcXN6MgJ",
+      APP_CLIENT_ID: "1nbai2no7mfe6m604ef9e71sc3",
+      IDENTITY_POOL_ID: "us-east-1:2f96cf7b-06c0-4bea-a52f-e7d8a9b4f29f"
     }
   };
   

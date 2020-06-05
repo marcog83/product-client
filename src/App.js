@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
 import Routes from './Routes';
 import { AppContext } from './libs/contextLib';
 import { Auth } from 'aws-amplify';
-import { onError } from "./libs/errorLib";
+import { onError } from './libs/errorLib';
 import './App.css';
 
 function App() {
@@ -38,31 +36,51 @@ function App() {
   }
   return (
     !isAuthenticating && (
-      <div className='App container'>
-        <Navbar fluid collapseOnSelect>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <Link to='/'>Scratch</Link>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-            <Nav pullRight>
-              {isAuthenticated ? (
-                <NavItem onClick={handleLogout}>Logout</NavItem>
-              ) : (
-                <>
-                  <LinkContainer to='/signup'>
-                    <NavItem>Signup</NavItem>
-                  </LinkContainer>
-                  <LinkContainer to='/login'>
-                    <NavItem>Login</NavItem>
-                  </LinkContainer>
-                </>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
+      <div className='container-fluid'>
+        <nav className='navbar navbar-expand-lg navbar-light bg-light'>
+          <div className='container-fluid'>
+            <div className='navbar-header'>
+              <Link className='navbar-brand' to='/'>
+                Home
+              </Link>
+            </div>
+
+            <div className='navbar navbar-expand'>
+              <ul className='ml-auto nav navbar-nav'>
+                <li className='nav-item'>
+                  <Link className='nav-link' to='/attributes'>
+                    Attributes
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link className='nav-link' to='/'>
+                    Rules
+                  </Link>
+                </li>
+                {isAuthenticated ? (
+                  <li onClick={handleLogout} className='nav-item'>
+                    <button type='button' className='btn btn-link'>
+                      Logout
+                    </button>
+                  </li>
+                ) : (
+                  <>
+                    <li className='nav-item'>
+                      <Link className='nav-link' to='/signup'>
+                        Signup
+                      </Link>
+                    </li>
+                    <li className='nav-item'>
+                      <Link className='nav-link' to='/login'>
+                        Login
+                      </Link>
+                    </li>
+                  </>
+                )}
+              </ul>
+            </div>
+          </div>
+        </nav>
         <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
           <Routes />
         </AppContext.Provider>
