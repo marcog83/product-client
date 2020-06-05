@@ -41,6 +41,7 @@ export default function Login() {
         <FormGroup controlId='email'>
           <FormLabel>Email</FormLabel>
           <FormControl
+            name='email'
             autoComplete='username'
             autoFocus
             type='email'
@@ -51,6 +52,7 @@ export default function Login() {
         <FormGroup controlId='password'>
           <FormLabel>Password</FormLabel>
           <FormControl
+            name='password'
             autoComplete='current-password'
             value={fields.password}
             onChange={handleFieldChange}

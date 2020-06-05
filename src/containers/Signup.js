@@ -84,6 +84,7 @@ export default function Signup() {
         <FormGroup controlId='email'>
           <FormLabel>Email</FormLabel>
           <FormControl
+            name='email'
             autoComplete='username'
             autoFocus
             type='email'
@@ -94,6 +95,7 @@ export default function Signup() {
         <FormGroup controlId='password'>
           <FormLabel>Password</FormLabel>
           <FormControl
+            name='password'
             autoComplete='new-password'
             type='password'
             value={fields.password}
@@ -103,6 +105,7 @@ export default function Signup() {
         <FormGroup controlId='confirmPassword'>
           <FormLabel>Confirm Password</FormLabel>
           <FormControl
+            name='confirmPassword'
             autoComplete='new-password'
             type='password'
             onChange={handleFieldChange}
