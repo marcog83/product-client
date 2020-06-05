@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RuleWhen } from './rule-when';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RuleThen } from './rule-then';
 import { RuleLogicalOperator } from './rule-logical-operator';
 import { useFormFields } from '../libs/hooksLib';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { API } from 'aws-amplify';
 import { onError } from '../libs/errorLib';
+import { Domains, Contexts } from '../utils/domains';
 
 const NEW_WHEN_CONDITION = () => ({
   type: 'condition',
@@ -27,7 +28,7 @@ const NEW_LOGICAL = () => ({
 const NEW_WHEN = () => ({
   type: 'when',
   payload: {
-    attribute: 'Attribute 1',
+    attributeId: '',
     conditions: [NEW_WHEN_CONDITION()],
   },
 });
@@ -40,14 +41,16 @@ const NEW_THEN_CONDITION = () => ({
 
 const NEW_THEN = () => {
   return {
-    attribute: 'Attribute 1',
+    attributeId: '',
     conditions: [NEW_THEN_CONDITION()],
   };
 };
 
 export function NewRule(props) {
   const { id } = useParams();
+  const history = useHistory();
   const [fields, setFields, setValues] = useFormFields(null);
+  const [attributes, setAttributes] = useState([]);
   useEffect(() => {
     function loadRule() {
       return API.get('root', `/rule/${id}`);
@@ -74,6 +77,14 @@ export function NewRule(props) {
       setValues(newRule);
     }
   }, [id, setValues]);
+
+  useEffect(() => {
+    async function getAttributes() {
+      const attributes = await API.get('root', '/attributes');
+      setAttributes(attributes);
+    }
+    getAttributes();
+  }, []);
 
   function addNewWhen() {
     const conditionsLength = fields.conditions.length;
@@ -120,18 +131,43 @@ export function NewRule(props) {
     };
     setValues(values);
   }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    console.log(fields);
+    const params = {
+      body: fields,
+    };
+    let newRecord;
+    if (!!id) {
+      try {
+        await API.put('root', `/rule/${id}`, params);
+        history.push('/');
+      } catch (e) {
+        onError(e);
+      }
+    } else {
+      try {
+        await API.post('root', `/rule`, params);
+        history.push('/');
+      } catch (e) {
+        onError(e);
+      }
+    }
+  }
+
   return (
     !!fields && (
-      <>
+      < >
         <div className='bd-example rule-header'>
           <div className='row'>
             <div className='col d-flex justify-content-between w-100'>
               <div className='form-group flex-grow-1'>
                 <label htmlFor='name'>Rule Name</label>
-                <input id='name' className='form-control' name='name' />
+                <input value={fields.name} onChange={setFields} id='name' className='form-control' name='name' />
               </div>
               <div className='align-items-center d-flex mt-3'>
-                <button className='btn btn-primary ml-2'>SAVE</button>
+                <button onClick={handleSubmit} className='btn btn-primary ml-2'>SAVE</button>
               </div>
             </div>
           </div>
@@ -143,7 +179,13 @@ export function NewRule(props) {
                 <div className='col'>
                   <div className='form-group'>
                     <label htmlFor='description'>Description</label>
-                    <textarea id='description' className='form-control' name='description'></textarea>
+                    <textarea
+                      rows='10'
+                      id='description'
+                      className='form-control'
+                      value={fields.description}
+                      onChange={setFields}
+                      name='description'></textarea>
                   </div>
                 </div>
               </div>
@@ -151,23 +193,29 @@ export function NewRule(props) {
               <div className='row'>
                 <div className='col'>
                   <div className='form-group'>
-                    <label>Scope</label>
-                    <select className='form-control' name='scope'>
-                      <option value>List View</option>
-                      <option value>Split List View</option>
-                      <option value>Grid View</option>
-                      <option value>Detail View</option>
-                      <option value>Field of Play</option>
-                      <option value>FOP Filters</option>
+                    <label>Domain</label>
+                    <select className='form-control' value={fields.domain} onChange={setFields} name='domain'>
+                      <option value=''>Choose a Domain...</option>
+                      {Domains.map(({ value, label }) => {
+                        return (
+                          <option key={value} value={value}>
+                            {label}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                   <div className='form-group'>
                     <label>Context</label>
-                    <select className='form-control' name='context'>
-                      <option value>Create</option>
-                      <option value>Read</option>
-                      <option value>Update</option>
-                      <option value>Delete</option>
+                    <select className='form-control' value={fields.context} onChange={setFields} name='context'>
+                      <option value=''>Choose a Context...</option>
+                      {Contexts.map(({ value, label }) => {
+                        return (
+                          <option key={value} value={value}>
+                            {label}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>
@@ -180,13 +228,19 @@ export function NewRule(props) {
                 if (type === 'when') {
                   return (
                     <RuleWhen
-                      key={payload.id}
+                      key={i}
                       {...payload}
+                      attributes={attributes}
                       prefix={`conditions.${i}.payload`}
                       onAddCondition={() => {
+                        const length = payload.conditions.length;
+                        let newCondition = [NEW_WHEN_LOGICAL(), NEW_WHEN_CONDITION()];
+                        if (length == 0) {
+                          newCondition = [NEW_WHEN_CONDITION()];
+                        }
                         const newPayload = {
                           ...payload,
-                          conditions: [...payload.conditions, NEW_WHEN_LOGICAL(), NEW_WHEN_CONDITION()],
+                          conditions: [...payload.conditions, ...newCondition],
                         };
 
                         setValues({
@@ -200,13 +254,29 @@ export function NewRule(props) {
                           }),
                         });
                       }}
-                      onRemoveCondition={(oldId) => {
+                      onRemoveCondition={() => {
                         setValues({
                           ...fields,
-                          conditions: {
-                            type,
-                            payload: fields.conditions.payload.filter(({ id }) => id !== oldId),
-                          },
+                          conditions: fields.conditions.map((condition, index) => {
+                            if (index === i) {
+                              const count = 2;
+                              let startAt = fields.conditions[i].payload.conditions.length - 1;
+                              if (startAt > 0) {
+                                startAt -= 1;
+                              }
+                              const conditions = [...fields.conditions[i].payload.conditions];
+                              conditions.splice(startAt, count);
+                              return {
+                                ...condition,
+                                payload: {
+                                  ...condition.payload,
+                                  conditions,
+                                },
+                              };
+                            } else {
+                              return condition;
+                            }
+                          }),
                         });
                       }}
                       onChange={setFields}
@@ -238,7 +308,9 @@ export function NewRule(props) {
               {fields.then.map((props, i) => {
                 return (
                   <RuleThen
+                    key={i}
                     {...props}
+                    attributes={attributes}
                     onAddCondition={() => {
                       const newPayload = {
                         ...props,
@@ -256,7 +328,26 @@ export function NewRule(props) {
                         }),
                       });
                     }}
-                    onRemoveCondition={() => {}}
+                    onRemoveCondition={() => {
+                      const conditions = [...props.conditions];
+                      const startAt = conditions.length - 1;
+                      conditions.splice(startAt, 1);
+                      const newPayload = {
+                        ...props,
+                        conditions,
+                      };
+
+                      setValues({
+                        ...fields,
+                        then: fields.then.map((then, index) => {
+                          if (index === i) {
+                            return newPayload;
+                          } else {
+                            return then;
+                          }
+                        }),
+                      });
+                    }}
                     onChange={setFields}
                     prefix={`then.${i}`}
                     onRemove={() => onRemoveThen(i)}

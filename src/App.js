@@ -47,13 +47,13 @@ function App() {
 
             <div className='navbar navbar-expand'>
               <ul className='ml-auto nav navbar-nav'>
-                <li class='nav-item'>
+                <li className='nav-item'>
                   <Link className='nav-link' to='/attributes'>
                     Attributes
                   </Link>
                 </li>
-                <li class='nav-item'>
-                  <Link className='nav-link' to='/rules'>
+                <li className='nav-item'>
+                  <Link className='nav-link' to='/'>
                     Rules
                   </Link>
                 </li>

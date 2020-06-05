@@ -3,10 +3,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RuleWhenCondition } from './rule-when-condition';
 import { RuleWhenLogical } from './rule-when-logical';
 
-export function RuleWhen({ onRemove, onChange, onAddCondition, onRemoveCondition, attribute, conditions, prefix }) {
+export function RuleWhen({
+  onRemove,
+  onChange,
+  onAddCondition,
+  onRemoveCondition,
+  attributes,
+  attributeId,
+  conditions,
+  prefix,
+}) {
   return (
     <div className='bd-example row'>
-      <button type='button' onClick={onRemove} class='close-btn close position-absolute' aria-label='Close'>
+      <button type='button' onClick={onRemove} className='close-btn close position-absolute' aria-label='Close'>
         <span aria-hidden='true'>&times;</span>
       </button>
       <div className='col'>
@@ -17,11 +26,14 @@ export function RuleWhen({ onRemove, onChange, onAddCondition, onRemoveCondition
                 <label className='input-group-text'>When:</label>
               </div>
 
-              <select value={attribute} onChange={onChange} name={`${prefix}.attribute`} className='form-control'>
-                <option>Attribute 1</option>
-                <option>Attribute 2</option>
-                <option>Attribute 3</option>
-                <option>Attribute 4</option>
+              <select value={attributeId} onChange={onChange} name={`${prefix}.attributeId`} className='form-control'>
+                {attributes.map((attribute) => {
+                  return (
+                    <option key={attribute.id} value={attribute.id}>
+                      {attribute.label}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
@@ -30,11 +42,21 @@ export function RuleWhen({ onRemove, onChange, onAddCondition, onRemoveCondition
           switch (type) {
             case 'condition':
               return (
-                <RuleWhenCondition prefix={`${prefix}.conditions.${i}.payload`} {...payload} onChange={onChange} />
+                <RuleWhenCondition
+                  key={i}
+                  prefix={`${prefix}.conditions.${i}.payload`}
+                  {...payload}
+                  onChange={onChange}
+                />
               );
             case 'logical':
               return (
-                <RuleWhenLogical prefix={`${prefix}.conditions.${i}.payload`} value={payload} onChange={onChange} />
+                <RuleWhenLogical
+                  key={i}
+                  prefix={`${prefix}.conditions.${i}.payload`}
+                  value={payload}
+                  onChange={onChange}
+                />
               );
           }
         })}

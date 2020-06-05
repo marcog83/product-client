@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormFields } from '../libs/hooksLib';
 
-export function Attribute({ onSubmit, ...props }) {
+export function Attribute({ onSubmit, onRemove, ...props }) {
   const [fields, handleFieldChange] = useFormFields(props);
   function handleSubmit(e) {
     e.preventDefault();
@@ -13,7 +13,13 @@ export function Attribute({ onSubmit, ...props }) {
         <div className='col'>
           <div className='form-group'>
             <label>Name</label>
-            <input className='form-control' onChange={handleFieldChange} name='name' value={fields.name}></input>
+            <input
+              className='form-control'
+              placeholder='type a name...'
+              onChange={handleFieldChange}
+              name='attrName'
+              required
+              value={fields.attrName}></input>
           </div>
         </div>
         <div className='col'>
@@ -23,7 +29,8 @@ export function Attribute({ onSubmit, ...props }) {
               className='form-control'
               onChange={handleFieldChange}
               name='label'
-              placeholder='type here a label...'
+              placeholder='type a label...'
+              required
               value={fields.label}
             />
           </div>
@@ -43,8 +50,8 @@ export function Attribute({ onSubmit, ...props }) {
         </div>
         <div className='col'>
           <div className='form-group'>
-            <label>Scope</label>
-            <select className='form-control' onChange={handleFieldChange} name='scope' value={fields.scope}>
+            <label>Domain</label>
+            <select className='form-control' onChange={handleFieldChange} name='domain' value={fields.domain}>
               <option value='r'>R</option>
               <option value='m'>M</option>
               <option value='a'>A</option>
@@ -158,10 +165,14 @@ export function Attribute({ onSubmit, ...props }) {
           </div>
         </div>
       </div>
-
-      <button className='btn btn-primary' type='submit'>
-        SUBMIT
-      </button>
+      <div className=''>
+        <button className='btn btn-primary' type='submit'>
+          {fields.id ? 'UPDATE' : 'SAVE'}
+        </button>
+        <button className='btn btn-danger' onClick={onRemove}>
+          DELETE
+        </button>
+      </div>
     </form>
   );
 }

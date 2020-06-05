@@ -1,5 +1,4 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react'; 
 
 export function RuleLogicalOperator({ prefix, onChange, value }) {
   return (

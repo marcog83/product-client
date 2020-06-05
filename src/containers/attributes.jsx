@@ -1,24 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Attribute } from './attribute';
 import { API } from 'aws-amplify';
 export function Attributes({}) {
   const [attributes, setAttributes] = useState([]);
-  async function onSubmit(attribute) {
+  useEffect(() => {
+    async function getAttributes() {
+      const attributes = await API.get('root', '/attributes');
+      setAttributes(attributes);
+    }
+    getAttributes();
+  }, []);
+
+  async function onSubmit({ uuid, ...attribute }) {
     const params = {
       body: attribute,
     };
+    let newRecord;
     if (attribute.id) {
-      await API.put('root', `/attribute/${attribute.id}`, params);
+      newRecord = await API.put('root', `/attribute/${attribute.id}`, params);
     } else {
-      await API.post('root', `/attribute`, params);
+      newRecord = await API.post('root', `/attribute`, params);
+      setAttributes((attributes) => {
+        return attributes.map((attribute) => {
+          if (attribute.uuid === uuid) {
+            return newRecord;
+          } else {
+            return attribute;
+          }
+        });
+      });
     }
   }
+
+  async function onRemove(id) {
+    const newAttributes = attributes.filter((attribute) => id !== attribute.id);
+    setAttributes(newAttributes);
+    await API.del('root', `/attribute/${id}`);
+  }
+
   function handleClickAdd(e) {
     const attribute = {
-      name: 'New Attribute',
-      label: 'New Attribute Label',
+      uuid: window.performance.now(),
+      name: '',
+      label: '',
       type: 'string',
-      scope: 'r',
+      domain: 'r',
       validation: {
         maxLength: 4,
         minValue: 0,
@@ -41,7 +67,9 @@ export function Attributes({}) {
         </button>
       </div>
       {attributes.map((attribute) => {
-        return <Attribute {...attribute} key={attribute.id} onSubmit={onSubmit} />;
+        const key = attribute.id || 'new';
+        const handleRemove = attribute.id ? () => onRemove(attribute.id) : null;
+        return <Attribute onRemove={handleRemove} {...attribute} key={key} onSubmit={onSubmit} />;
       })}
     </>
   );
